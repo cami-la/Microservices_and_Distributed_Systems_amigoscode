@@ -28,7 +28,7 @@ public class FraudCheckHistory {
       generator = "fraud_id_sequence"
   )
   private Integer id;
-  private Integer CustomerId;
+  private Integer customerId;
   private Boolean isFraudster;
   private LocalDateTime createAt;
 }

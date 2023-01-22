@@ -1,13 +1,27 @@
 version: '3.1'
 
 services:
-  db:
+  db-customer:
     image: postgres
     restart: always
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_USER: ${POSTGRES_USER:-amigoscode}
       POSTGRES_DB: ${POSTGRES_DB:-customer}
+      PGDATA: /data/postgres
+    volumes:
+      - /data/postgres
+    ports:
+      - 5432:5432
+    networks:
+      - postgres
+  db-fraud:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_USER: ${POSTGRES_USER:-amigoscode}
+      POSTGRES_DB: ${POSTGRES_DB:-fraud}
       PGDATA: /data/postgres
     volumes:
       - /data/postgres

@@ -4,4 +4,15 @@ server:
 spring:
   application:
     name: customer
-
+  datasource:
+    password: password
+    url: jdbc:postgresql://172.18.0.2:5432/customer
+    username: amigoscode
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true

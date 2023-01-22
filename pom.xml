@@ -11,7 +11,11 @@
 	<groupId>com.amigoscode</groupId>
 	<artifactId>amigosservices</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>amigosservices</name>
+    <packaging>pom</packaging>
+    <name>amigosservices</name>
+	<modules>
+		<module>customer</module>
+	</modules>
 
 	<properties>
 		<java.version>17</java.version>

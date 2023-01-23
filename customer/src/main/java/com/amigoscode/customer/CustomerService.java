@@ -2,14 +2,15 @@ package com.amigoscode.customer;
 
 import com.amigoscode.clients.fraud.FraudCheckResponse;
 import com.amigoscode.clients.fraud.FraudClient;
+import com.amigoscode.clients.notification.NotificationClient;
+import com.amigoscode.clients.notification.NotificationRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public record CustomerService(
     CustomerRepository customerRepository,
-    RestTemplate restTemplate,
-    FraudClient fraudClient
+    FraudClient fraudClient,
+    NotificationClient notificationClient
 ) {
   public void registrationCustomer(CustomerRegistrationRequest request) {
     Customer customer = Customer.builder()
@@ -26,6 +27,13 @@ public record CustomerService(
     if(fraudCheckResponse.isFraudster()) {
       throw new IllegalStateException("fraudster");
     }
-    //todo: send notification
+    //todo: make it sync. i.e add to queue
+    this.notificationClient.sendNotification(
+        new NotificationRequest(
+            customer.getId(),
+            customer.getEmail(),
+            String.format("Hi %s, welcome to Amigoscode...", customer.getFirstName())
+        )
+    );
   }
 }

@@ -26,3 +26,9 @@ scrape_configs:
       - targets: [ "172.17.0.1:8083" ]
         labels:
           application: "notification"
+  - job_name: "api-gateway-job"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: [ "172.17.0.1:8081" ]
+        labels:
+          application: "api-gateway"

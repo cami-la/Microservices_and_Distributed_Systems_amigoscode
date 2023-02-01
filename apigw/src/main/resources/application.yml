@@ -1,0 +1,26 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: api-gateway
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: 'health,metrics,prometheus'
+  endpoint:
+    health:
+      enable: true
+      show-details: always
+    prometheus:
+      enabled: true
+
+# docker compose -f stack.yml up
+# docker inspect <COINTAINER ID> | grep IPAddress

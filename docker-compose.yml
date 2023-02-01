@@ -12,7 +12,7 @@ services:
     volumes:
       - /data/postgres
     ports:
-      - 5432:5432
+      - 5431:5432
     networks:
       - postgres
   db-fraud:
@@ -29,6 +29,20 @@ services:
       - 5432:5432
     networks:
       - postgres
+  db-notification:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_USER: ${POSTGRES_USER:-amigoscode}
+      POSTGRES_DB: ${POSTGRES_DB:-notification}
+      PGDATA: /data/postgres
+    volumes:
+      - /data/postgres
+    ports:
+      - 5433:5432
+    networks:
+      - postgres
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -42,13 +56,35 @@ services:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
       - postgres
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - 9090:9090
+    networks:
+      - back-tier
+    restart: always
+  grafana:
+    image: grafana/grafana:latest
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    networks:
+      - back-tier
+    restart: always
 
 networks:
   postgres:
+  back-tier:
     driver: bridge
 
 volumes:
   postgres:
+  prometheus_data: {}
+  grafana_data: {}
 
 # docker compose up -d
 # docker inspect <COINTAINER ID> | grep IPAddress

@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "eureka-service-job"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["172.17.0.1:8761"]
+        labels:
+          application: "eureka-server"
+  - job_name: "customer-job"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: [ "172.17.0.1:8080" ]
+        labels:
+          application: "customer"
+  - job_name: "fraud-job"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: [ "172.17.0.1:8082" ]
+        labels:
+          application: "fraud"
+  - job_name: "notification-job"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: [ "172.17.0.1:8083" ]
+        labels:
+          application: "notification"

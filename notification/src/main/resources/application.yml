@@ -5,7 +5,7 @@ spring:
     name: notification
   datasource:
     password: password
-    url: jdbc:postgresql://172.18.0.3:5432/notification
+    url: jdbc:postgresql://172.18.0.4:5432/notification
     username: amigoscode
   jpa:
     hibernate:
@@ -21,3 +21,15 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: 'health,metrics,prometheus'
+  endpoint:
+    health:
+      enable: true
+      show-details: always
+    prometheus:
+      enabled: true

@@ -5,7 +5,7 @@ spring:
     name: fraud
   datasource:
     password: password
-    url: jdbc:postgresql://172.18.0.3:5432/fraud
+    url: jdbc:postgresql://172.18.0.2:5432/fraud
     username: amigoscode
   jpa:
     hibernate:
@@ -21,3 +21,18 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: 'health,metrics,prometheus'
+  endpoint:
+    health:
+      enable: true
+      show-details: always
+    prometheus:
+      enabled: true
+
+# docker compose -f stack.yml up
+# docker inspect <COINTAINER ID> | grep IPAddress

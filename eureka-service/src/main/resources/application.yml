@@ -7,3 +7,15 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: 'health,metrics,prometheus'
+  endpoint:
+    health:
+      enable: true
+      show-details: always
+    prometheus:
+      enabled: true

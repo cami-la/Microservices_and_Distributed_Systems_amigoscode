@@ -1,4 +1,4 @@
-package com.amigoscode;
+package com.amigoscode.notification;
 
 import com.amigoscode.clients.notification.NotificationRequest;
 import org.springframework.stereotype.Service;

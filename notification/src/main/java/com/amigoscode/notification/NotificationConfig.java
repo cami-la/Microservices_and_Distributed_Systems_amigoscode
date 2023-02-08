@@ -1,5 +1,6 @@
-package com.amigoscode;
+package com.amigoscode.notification;
 
+import lombok.Data;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -9,14 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public record NotificationConfig(
-    @Value("${rabbitmq.exchanges.internal}")
-    String internalExchange,
-    @Value("${rabbitmq.queues.notification}")
-    String notificationQueue,
-    @Value("${rabbitmq.routing-keys.internal-notification}")
-    String internalNotificationRoutingKey
-) {
+@Data
+public class NotificationConfig {
+  @Value("${rabbitmq.exchanges.internal}")
+  private String internalExchange;
+  @Value("${rabbitmq.queues.notification}")
+  private String notificationQueue;
+  @Value("${rabbitmq.routing-keys.internal-notification}")
+  private String internalNotificationRoutingKey;
 
   @Bean
   public TopicExchange internalTopicExchange() {
@@ -32,7 +33,7 @@ public record NotificationConfig(
   public Binding internalToNotificationBinding() {
     return BindingBuilder
         .bind(this.notificationQueues())
-        .to(internalTopicExchange())
-        .with(this.internalNotificationRoutingKey);
+        .to(this.internalTopicExchange())
+        .with(this.getInternalNotificationRoutingKey());
   }
 }

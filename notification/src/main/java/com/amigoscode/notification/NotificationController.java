@@ -1,4 +1,4 @@
-package com.amigoscode;
+package com.amigoscode.notification;
 
 import lombok.extern.slf4j.Slf4j;
 import com.amigoscode.clients.notification.NotificationRequest;

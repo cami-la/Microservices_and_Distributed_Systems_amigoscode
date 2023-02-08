@@ -1,5 +1,6 @@
 package com.amigoscode.customer;
 
+import com.amigoscode.ampq.RabbitMQMessageProducer;
 import com.amigoscode.clients.fraud.FraudCheckResponse;
 import com.amigoscode.clients.fraud.FraudClient;
 import com.amigoscode.clients.notification.NotificationClient;
@@ -11,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 public record CustomerService(
     CustomerRepository customerRepository,
     FraudClient fraudClient,
-    NotificationClient notificationClient
+    RabbitMQMessageProducer rabbitMQMessageProducer
 ) {
   public void registrationCustomer(CustomerRegistrationRequest request) {
     Customer customer = Customer.builder()
@@ -25,14 +26,14 @@ public record CustomerService(
     //todo: check if fraudster
 
     FraudCheckResponse fraudCheckResponse = this.fraudClient.isFraudster(customer.getId());
-    if(fraudCheckResponse.isFraudster()) {
+    if (fraudCheckResponse.isFraudster()) {
       throw new IllegalStateException("fraudster");
     }
-    //todo: send notification
-    this.notificationClient.sendNotification(
-        new NotificationRequest(customer.getId(),
-            customer.getEmail(),
-            String.format("Hi %s welcome to Amigoscode...", customer.getFirstName()))
-    );
+    NotificationRequest notificationRequest = new NotificationRequest(customer.getId(),
+        customer.getEmail(),
+        String.format("Hi %s welcome to Amigoscode...", customer.getFirstName()));
+    this.rabbitMQMessageProducer.publish(notificationRequest,
+        "internal.exchange",
+        "internal.notification.routing-key");
   }
 }

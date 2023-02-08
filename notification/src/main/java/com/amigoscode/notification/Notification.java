@@ -1,4 +1,4 @@
-package com.amigoscode;
+package com.amigoscode.notification;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,11 +1,12 @@
 server:
   port: 8083
+
 spring:
   application:
     name: notification
   datasource:
     password: password
-    url: jdbc:postgresql://172.18.0.4:5432/notification
+    url: jdbc:postgresql://172.18.0.5:5432/notification
     username: amigoscode
   jpa:
     hibernate:
@@ -15,6 +16,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+  rabbitmq:
+    addresses: localhost:5672
+
 eureka:
   client:
     fetch-registry: true
@@ -33,3 +37,10 @@ management:
       show-details: always
     prometheus:
       enabled: true
+rabbitmq:
+  exchanges:
+    internal: internal.exchange
+  queues:
+    notification: notification.queue
+  routing-keys:
+    internal-notification: internal.notification.routing-key

@@ -6,7 +6,7 @@ spring:
     name: notification
   datasource:
     password: password
-    url: jdbc:postgresql://172.18.0.5:5432/notification
+    url: jdbc:postgresql://172.18.0.3:5432/notification
     username: amigoscode
   jpa:
     hibernate:

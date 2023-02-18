@@ -64,7 +64,7 @@ services:
     ports:
       - 9090:9090
     networks:
-      - back-tier
+      - spring
     restart: always
   grafana:
     image: grafana/grafana:latest
@@ -73,7 +73,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - back-tier
+      - spring
     restart: always
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
@@ -86,20 +86,24 @@ services:
     container_name: eureka-server
     ports:
       - 8761:8761
-    depends_on:
-      - prometheus
+    networks:
+      - spring
+#    depends_on:
+#      - prometheus
   apigw:
     image: camila94/apigw:latest
     container_name: apigw
     ports:
       - 8081:8081
+    networks:
+      - spring
     depends_on:
-      - prometheus
+#      - prometheus
       - eureka-server
 
 networks:
   postgres:
-  back-tier:
+  spring:
     driver: bridge
 
 volumes:

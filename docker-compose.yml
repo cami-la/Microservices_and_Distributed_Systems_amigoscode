@@ -81,6 +81,21 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+  eureka-server:
+    image: camila94/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - 8761:8761
+    depends_on:
+      - prometheus
+  apigw:
+    image: camila94/apigw:latest
+    container_name: apigw
+    ports:
+      - 8081:8081
+    depends_on:
+      - prometheus
+      - eureka-server
 
 networks:
   postgres:

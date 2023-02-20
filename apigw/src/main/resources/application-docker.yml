@@ -1,28 +1,27 @@
 server:
-  port: 8080
+  port: 8081
 spring:
   application:
-    name: customer
-  datasource:
-    password: password
-    url: jdbc:postgresql://172.18.0.2:5432/customer
-    username: amigoscode
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    show-sql: true
-  rabbitmq:
-    addresses: localhost:5672
+    name: api-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        - id: customer
+          uri: lb://CUSTOMER
+          predicates:
+            - Path=/api/customers/**
+#        - id: fraud
+#          uri: lb://FRAUD
+#          predicates:
+#            - Path=/api/fraud-check/**
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://172.17.0.1:8761/eureka
+      defaultZone: http://eureka-server:8761/eureka
     instance:
       preferIpAddress: true
 management:

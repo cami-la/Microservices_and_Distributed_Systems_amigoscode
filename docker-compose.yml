@@ -3,7 +3,7 @@ version: '3.1'
 services:
   db-customer:
     image: postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_USER: ${POSTGRES_USER:-amigoscode}
@@ -17,7 +17,7 @@ services:
       - postgres
   db-fraud:
     image: postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_USER: ${POSTGRES_USER:-amigoscode}
@@ -31,7 +31,7 @@ services:
       - postgres
   db-notification:
     image: postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_USER: ${POSTGRES_USER:-amigoscode}
@@ -45,7 +45,7 @@ services:
       - postgres
   pgadmin:
     image: dpage/pgadmin4
-    restart: always
+    restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
@@ -64,7 +64,7 @@ services:
     ports:
       - 9090:9090
     networks:
-      - back-tier
+      - spring
     restart: always
   grafana:
     image: grafana/grafana:latest
@@ -73,7 +73,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - back-tier
+      - spring
     restart: always
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
@@ -81,14 +81,77 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    networks:
+      - spring
+  eureka-server:
+    image: camila94/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - 8761:8761
+    networks:
+      - spring
+  apigw:
+    image: camila94/apigw:latest
+    container_name: apigw
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - eureka-server
+  customer:
+    image: camila94/customer:latest
+    container_name: customer
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - eureka-server
+      - db-customer
+      - rabbitmq
+  fraud:
+    image: camila94/fraud:latest
+    container_name: fraud
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - eureka-server
+      - db-fraud
+      - rabbitmq
+  notification:
+    image: camila94/notification:latest
+    container_name: notification
+    ports:
+      - 8083:8083
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - eureka-server
+      - db-notification
+      - rabbitmq
 
 networks:
   postgres:
-  back-tier:
+  spring:
     driver: bridge
 
 volumes:
   postgres:
+  pgadmin:
   prometheus_data: {}
   grafana_data: {}
 

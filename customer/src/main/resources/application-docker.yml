@@ -1,12 +1,11 @@
 server:
-  port: 8083
-
+  port: 8080
 spring:
   application:
-    name: notification
+    name: customer
   datasource:
     password: password
-    url: jdbc:postgresql://172.18.0.3:5432/notification
+    url: jdbc:postgresql://db-customer:5432/customer
     username: amigoscode
   jpa:
     hibernate:
@@ -17,14 +16,13 @@ spring:
         format_sql: true
     show-sql: true
   rabbitmq:
-    addresses: localhost:5672
-
+    addresses: rabbitmq:5672
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://172.17.0.1:8761/eureka
+      defaultZone: http://eureka-server:8761/eureka
     instance:
       preferIpAddress: true
 management:
@@ -39,10 +37,6 @@ management:
       show-details: always
     prometheus:
       enabled: true
-rabbitmq:
-  exchanges:
-    internal: internal.exchange
-  queues:
-    notification: notification.queue
-  routing-keys:
-    internal-notification: internal.notification.routing-key
+
+# docker compose -f stack.yml up
+# docker inspect <COINTAINER ID> | grep IPAddress

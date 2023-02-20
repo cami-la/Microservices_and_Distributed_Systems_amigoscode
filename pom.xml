@@ -17,7 +17,7 @@
   <modules>
     <module>customer</module>
     <module>fraud</module>
-    <module>eureka-service</module>
+    <module>eureka-server</module>
     <module>clients</module>
     <module>notification</module>
     <module>apigw</module>

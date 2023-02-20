@@ -22,6 +22,8 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://eureka-server:8761/eureka
+    instance:
+      preferIpAddress: true
 management:
   endpoints:
     enabled-by-default: false
